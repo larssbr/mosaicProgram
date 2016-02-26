@@ -3,7 +3,7 @@
 - change argument parser
 --> maybe make -i 'is_infofile' similar to -showmatches argument 
 
---> to work with stitch() method
+--> to work with mosaicCreate() method
 
 - make functions do only one thing, not multiple things -- SOME DONE
 
