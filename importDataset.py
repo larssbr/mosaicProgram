@@ -2,6 +2,7 @@
 import logging
 import os
 import cv2
+import csv
 
 # images class preps data structure for use by Stitch class
 # facilitates being able to handle multiple types of image gathering methods (load from S3, etc.)
@@ -11,23 +12,22 @@ class Images:
         self.logger = logging.getLogger()
         self.imageList = []
         #self.infolist = None
-        #TODO why 100?
         self.image_width = 100
         self.imageHeight = 100
         self.filenames = []
 
-    # from main innput argument is (args['dir']) --> dir_path = 'dir'
+    # from main input argument is (args['dir']) --> dir_path = 'dir'
     def loadFromDirectory(self, dir_path=None, is_infofile=None):
         self.logger.info("Searching for images and posAnd_dir.csv in: {}".format(dir_path))
 
         if dir_path == None:
-            raise Exception("You need to innput the directory string where source images are placed on your computer")
+            raise Exception("You need to input the directory string where source images are placed on your computer")
         if not os.path.isdir(dir_path):
             raise Exception("Directory string is not correct, check that your directory string is correct!")
 
         # grab pose data from csv # pose contains: filename,latitude,longitude,altitude,yaw,pitch,roll
         if is_infofile==True: # --> only grab infofile if there is one
-            print "is_infofile was set to True"
+            self.logger.info("is_infofile was set to True")
             self.infolist = self.getPoseData(dir_path)
             if len(self.infolist) == 0:
                 self.logger.error("Error reading posAnd_dir.csv")
@@ -40,18 +40,18 @@ class Images:
             return False
 
         # load the imagesz
-        for i,img_filename in enumerate(self.filenames):
+        for i, img_filename in enumerate(self.filenames):
             self.logger.info("Opening file: {}".format(img_filename))
             self.imageList.append(cv2.imread(img_filename))
 
         # set attributes of image_width & imageHeight for images (based on image 1),
         # -->  assumes all images are the same size
-        (self.image_width, self.imageHeight) = self.getimage_attributes(self.imageList[0])
+        (self.image_width, self.imageHeight) = self.getimage_shape(self.imageList[0])
 
         self.logger.info("Data loaded successfully.")
 
-    def getimage_attributes(self, img):
-        return (img.shape[1], img.shape[0])
+    def getimage_shape(self, img):
+        return img.shape[1], img.shape[0]
 
     # getPoseData() is called within loadFromDirectory --> it is a helper method
     def getPoseData(self, dir_path):
@@ -60,8 +60,8 @@ class Images:
         reader = csv.DictReader(open(dir_path+'/posAnd_dir.csv')) # The name has to be: '/posAnd_dir.csv'
         data = []
         for row in reader:
-            for key,val in row.iteritems():
-                val = val.replace('\xc2\xad', '') # some weird unicode characters in the list from pdf # todo: understand this \xc2\xad
+            for key, val in row.iteritems():
+                val = val.replace('\xc2\xad', '') # understand this \xc2\xad
                 try:
                     row[key] = float(val)
                 except ValueError:
@@ -69,7 +69,8 @@ class Images:
             data.append(row)
         self.logger.info("Read {} rows from posAnd_dir.csv".format(len(data)))
         # helper dict for quickly finding pose data in O(1)
-        poseByFilenameList = dict((d["filename"], dict(d, index=i)) for (i, d) in enumerate(data)) #todo:  what does "dict" do
+        poseByFilenameList = dict((d["filename"],
+                                   dict(d, index=i)) for (i, d) in enumerate(data))
         return poseByFilenameList
 
     # getFilenames() is called within loadFromDirectory --> it is a helper method
@@ -85,5 +86,3 @@ class Images:
         else:
             self.logger.info("Found {} files in directory: {}".format(len(filenames), sPath))   #Found 74 files in directory: datasets/example2
             return filenames
-
-
