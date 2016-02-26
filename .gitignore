@@ -6,8 +6,9 @@
 /datasets/mosaic_camera/*
 /datasets/example1/*
 /preprocess_tools/*
-/opencvTheory.md
-/parameters.md
-/progress.md
-/theory.md
-/todo.md
+/overview/opencvTheory.md
+/overview/parameters.md
+/overview/progress.md
+/overview/theory.md
+/overview/todo.md
+/overview/*
