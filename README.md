@@ -25,6 +25,10 @@ python mosaic.py -d datasets/example5 -is 0.1 -os 0.9 -m
 ``-os`` is the scaling on the output container (smaller value = smaller output mosaic)
 ``-m`` is for intermediate matching visualizations.
 
+It will create a mosaic like this one:
+![alt tag](https://github.com/larssbr/mosaicProgram/blob/master/example/example5mosaic.png)
+
+
 ## Assumptions of imageset -------------------------------------------------------
 
 Program assumes all images in the directory folder set by the user is in the same SIZE.
