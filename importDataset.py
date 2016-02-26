@@ -40,9 +40,9 @@ class Images:
             return False
 
         # load the imagesz
-        for i,img in enumerate(self.filenames):
-            self.logger.info("Opening file: {}".format(img))
-            self.imageList.append(cv2.imread(img))
+        for i,img_filename in enumerate(self.filenames):
+            self.logger.info("Opening file: {}".format(img_filename))
+            self.imageList.append(cv2.imread(img_filename))
 
         # set attributes of image_width & imageHeight for images (based on image 1),
         # -->  assumes all images are the same size

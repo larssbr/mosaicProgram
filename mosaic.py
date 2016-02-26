@@ -165,10 +165,10 @@ class MosaicClass:
             features.append(feats)
 
              # Show Kpts
-            img_kpts = cv2.drawKeypoints(img, keypts)
-            cv2.imshow("imgKpts", img_kpts)
-            cv2.waitKey(0)
-            plt.
+            #img_kpts = cv2.drawKeypoints(img, keypts)
+            #cv2.imshow("imgKpts", img_kpts)
+            #cv2.waitKey(0)
+
 
 
 
@@ -341,7 +341,7 @@ class MosaicClass:
         FLANN_INDEX_KDTREE = 0
         index_params = dict(algorithm = FLANN_INDEX_KDTREE,
                             trees = 5)
-        search_params = (checks = 50)   # or pass empty dictionary
+        search_params = dict(checks = 50)   # or pass empty dictionary
         flann = cv2.FlannBasedMatcher(index_params, search_params)
         raw_matches = flann.knnMatch(features_img, features_container, k=2)
 
@@ -434,6 +434,9 @@ if __name__=="__main__":
     # python mosaic.py -d datasets/example1 -i True -is 0.01 -os 0.1 -m
     # python mosaic.py -d datasets/example1 -i True -is 10.0 -os 0.1 -m
     # python mosaic.py -d datasets/example1 -i True -is 1.0 -os 1.0 -m
+
+    # python mosaic.py -d datasets\mosaic_camera\90deg_smallFolder  -i True -is 1.0 -os 1.0 -m
+
 
 
     ## Arguments that get passed in from the terminal
