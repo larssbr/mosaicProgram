@@ -1,0 +1,7 @@
+*.DS_Store
+/.idea/*
+# image folders
+/datasets/calibrationIMG/*
+/datasets/CalibratorFolder/*
+/datasets/mosaic_camera/*
+/datasets/example1/*
