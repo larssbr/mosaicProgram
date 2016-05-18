@@ -12,10 +12,9 @@ from importDataset import Images  # Import the functions made in importDataset
 
 logging.basicConfig(format='%(asctime)s %(levelname)s [%(module)s] %(message)s', level=logging.INFO)
 
-
 class MosaicClass:
     # __init__ gets the attributes calculated/processed in Images()
-    def __init__(self, images_obj,is_infofile=None):
+    def __init__(self, images_obj, is_infofile=None):
         self.logger = logging.getLogger()
         self.images = images_obj.imageList
         self.image_width = images_obj.image_width
@@ -53,7 +52,7 @@ class MosaicClass:
         grey = cv2.cvtColor(resized,cv2.COLOR_BGR2GRAY)
         [ret, thresh] = cv2.threshold(grey,10,255,cv2.THRESH_BINARY)
         #TODO: solve isssue : x,y,w,h = cv2.boundingRect(cnt) , TypeError: points is not a numpy array, neither a scalar
-        #
+
         # check to see if we are using OpenCV 2.X
         if imutils.is_cv2():
             [contours, hierarchy] = cv2.findContours(thresh, 1, 2)
@@ -93,7 +92,7 @@ class MosaicClass:
             pose_i = poses[os.path.basename(self.filenames[i])] # get dict elements from filename
             yaw_i = pose_i['yaw'] # already in degrees as needed by opencv rotation function
             self.logger.info("Rotating image {} by {} degrees".format(i, yaw_i))
-            self.images[i] = self.rotateimage_andCenter(self.images[i],yaw_i)
+            self.images[i] = self.rotateimage_andCenter(self.images[i], yaw_i)
 
 
     def resizeImages(self,in_width):
@@ -168,10 +167,6 @@ class MosaicClass:
             #img_kpts = cv2.drawKeypoints(img, keypts)
             #cv2.imshow("imgKpts", img_kpts)
             #cv2.waitKey(0)
-
-
-
-
 
 
         #--> Create the empty mosaic container --> 2D global reference frame
@@ -466,7 +461,7 @@ if __name__=="__main__":
     # Call imgs.loadFromDirectory to run all the methods in Images()
     imgs.loadFromDirectory(args['dir'], is_infofile=args['is_infofile'])   # ,is_infofile)
 
-    # //--------------- Coorect images for underwater eroors ------//
+    # //--------------- Coorect images for underwater errors ------//
     # --> TODO: Correction of lens distortion --->C Camera calibration
 
     ## runs the MosaicClass() class to 'stitch' the images

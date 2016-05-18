@@ -4,6 +4,9 @@ import os
 import cv2
 import csv
 
+from glob import glob
+import re
+
 # images class preps data structure for use by Stitch class
 # facilitates being able to handle multiple types of image gathering methods (load from S3, etc.)
 class Images:
@@ -18,6 +21,7 @@ class Images:
 
     # from main input argument is (args['dir']) --> dir_path = 'dir'
     def loadFromDirectory(self, dir_path=None, is_infofile=None):
+        self.dir_path = dir_path
         self.logger.info("Searching for images and posAnd_dir.csv in: {}".format(dir_path))
 
         if dir_path == None:
@@ -35,10 +39,12 @@ class Images:
 
         # grab filenames of the images in the specified directory
         self.filenames = self.getFilenames(dir_path)
+        self.filenames = self.get_sorted_files2()
         if self.filenames == None: # --> if there is no files in directory, then STOP
             self.logger.error("Error reading filenames, check if the directory is empty?")
             return False
 
+        # ELSE do this
         # load the imagesz
         for i, img_filename in enumerate(self.filenames):
             self.logger.info("Opening file: {}".format(img_filename))
@@ -86,3 +92,29 @@ class Images:
         else:
             self.logger.info("Found {} files in directory: {}".format(len(filenames), sPath))   #Found 74 files in directory: datasets/example2
             return filenames
+
+    ######## This part sorts the files _123 _1 _4 as _1 _4 _123. It is slow, but it works!!
+    # Daniel DiPaolo answer in  http://stackoverflow.com/questions/4623446/how-do-you-sort-files-numerically
+    def tryint(self, s):
+        try:
+            return int(s)
+        except:
+            return s
+
+    def alphanum_key(self, s):
+        """ Turn a string into a list of string and number chunks.
+            "z23a" -> ["z", 23, "a"]
+        """
+        return [self.tryint(c) for c in re.split('([0-9]+)', s)]
+
+    def sort_nicely(self, l):
+        """ Sort the given list in the way that humans expect.
+        """
+        l.sort(key=self.alphanum_key)
+        return l
+
+    def get_sorted_files2(self):
+        files_list = glob(os.path.join(self.dir_path, '*.jpg'))  # Todo, add support for .png and other filetypes
+        return self.sort_nicely(files_list)  # files_list.sort(key=self.getint)  # sorted(files_list)
+
+        ######## End of sorting function
