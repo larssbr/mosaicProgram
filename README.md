@@ -71,6 +71,11 @@ In this way the mosaic image occupies always the same size in memory
 
 ## Future work  presented by Lars Brusletto ##################################################
 
+--> Implement  a hybrid SLAM system between RatSLAM and FAB-MAP. The hybrid system combines
+RatSLAM’s filtering and mapping algorithms with FABMAP’s lighting invariant data association, with the aim to
+create a robust system for SLAM over long time periods in
+visually varying environments.
+
 --> click on the newly made mosaic image. From this click it schould be possible to derrive the [lattitude, longditude]
 Then: use [lat,long] to make a new path for the ROV to return to this position
 
